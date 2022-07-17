@@ -17,16 +17,47 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// continue study : template and views videos no.2
 
-Route::get('/homeindex', function () {
-    return view('home.index',[]);
-})->name('home.index');
 
-Route::get('/posts/{id}', function ($id) {
+// Route::get('/home-index', function () {
+//     return view('home.index',[]);
+// })->name('home.index');
 
-   return 'Blog post' . $id;
+
+// Route::get('/contact', function () {
+//     return view('home.contact');
+// })->name('home.contact');
+
+route::view('/home','home.index')  #route:view for static pages
+    ->name('home.index');
+route::view('/contact','home.contact')
+    ->name('home.contact');
+
+    $posts = [
+        1 => [
+            'title' => 'Intro to Laravel',
+            'content' => 'This is a short intro to Laravel',
+            'is_new' =>true,
+            'has_comments' =>true
+        ],
+        2 => [
+            'title' => 'Intro to PHP',
+            'content' => 'This is a short intro to PHP',
+            'is_new' => false
+        ],
+    ];
+    
+Route::get('/posts',function() use($posts){
+ return view('post.index',['posts' =>$posts]);
+});
+Route::get('/posts/{id}', function ($id) use($posts) {
+
+ 
+    abort_if(!isset($posts[$id]),404); // generate error message if no record
+   return view('post.show',['post'=>$posts[$id] ]);
  })
+
+ 
 //  ->where([   # use where to add constrain   // gloablly check RouteServiceProvider.php line 39
 //  'id' => '[0-9]+' #'+' sign means need atleast 1 character
 //  ])
